@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Enquiry Form</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <div class="card header">
+    <h1 id="formTitle">Enquiry Form</h1>
+    <p class="sub">Employment verification enquiry</p>
+    <p class="req-note">* Indicates required question</p>
+  </div>
+
+  <div class="card">
+    <h2 class="sec">Company details <span class="lock">Pre-filled</span></h2>
+    <div class="grid" id="companyGrid"></div>
+  </div>
+
+  <div class="card">
+    <h2 class="sec">Employment details <span class="lock">Pre-filled</span></h2>
+    <div class="grid" id="employmentGrid"></div>
+  </div>
+
+  <form id="enquiryForm" novalidate>
+
+    <div class="card" data-field>
+      <label class="q" for="exitDate">EXIT DATE <span class="star">*</span></label>
+      <p class="hint">Date the employee left the company</p>
+      <input type="date" id="exitDate" name="exitDate" required>
+      <div class="err" id="exitErr">This is a required question</div>
+    </div>
+
+    <div class="card" data-field>
+      <label class="q" for="reasonForLeaving">REASON FOR LEAVING <span class="star">*</span></label>
+      <textarea id="reasonForLeaving" name="reasonForLeaving" rows="3" placeholder="Your answer" required></textarea>
+      <div class="err">This is a required question</div>
+    </div>
+
+    <div class="card" data-field>
+      <span class="q">RATING <span class="star">*</span></span>
+      <div class="stars" id="stars" role="radiogroup" aria-label="Rating out of 5">
+        <button type="button" data-v="1" aria-label="1 star">&#9733;</button>
+        <button type="button" data-v="2" aria-label="2 stars">&#9733;</button>
+        <button type="button" data-v="3" aria-label="3 stars">&#9733;</button>
+        <button type="button" data-v="4" aria-label="4 stars">&#9733;</button>
+        <button type="button" data-v="5" aria-label="5 stars">&#9733;</button>
+        <span class="lbl" id="ratingLbl">Not rated</span>
+      </div>
+      <div class="err">Please select a rating</div>
+    </div>
+
+    <div class="card" data-field>
+      <span class="q">EMPLOYMENT ACCEPT <span class="star">*</span></span>
+      <div class="radios">
+        <label><input type="radio" name="employementAccept" value="yes"> Yes</label>
+        <label><input type="radio" name="employementAccept" value="no"> No</label>
+      </div>
+      <div class="err">This is a required question</div>
+    </div>
+
+    <div class="actions">
+      <button type="submit" class="primary">Submit</button>
+      <button type="button" class="link" id="clearBtn">Clear form</button>
+    </div>
+  </form>
+
+  <div class="card out" id="out">
+    <h2>Submitted data (also logged to console)</h2>
+    <pre id="outJson"></pre>
+  </div>
+
+  <p class="foot">Never submit passwords through this form.</p>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
