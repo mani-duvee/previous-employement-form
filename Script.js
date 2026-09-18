@@ -125,25 +125,27 @@ var recordDisplayFields = [
 async function fetchVerificationDetails(keyword) {
   if (!keyword) return;
 
-  var baseUrl = getApiBaseUrl();
-  var endpoint = (baseUrl ? baseUrl : '') + '/api/v1/public/previous-employment/verify?keyword=' + encodeURIComponent(keyword);
-
-  console.log("Calling Verification GET API:", endpoint);
   showApiLoading(true, 'Fetching verification details for keyword...');
 
   try {
-    var response = await fetch(endpoint, {
-      method: 'GET',
-      headers: {
-        'Accept': 'application/json'
+    var result;
+    if (window.API_SERVICE && typeof window.API_SERVICE.fetchData === 'function') {
+      result = await window.API_SERVICE.fetchData(keyword);
+    } else {
+      var baseUrl = getApiBaseUrl();
+      var endpointPath = (window.endpoints && window.endpoints.fetch_data) || '/api/v1/public/previous-employment/verify';
+      var endpoint = (baseUrl ? baseUrl : '') + endpointPath + '?keyword=' + encodeURIComponent(keyword);
+      console.log("Calling Verification GET API:", endpoint);
+      var response = await fetch(endpoint, {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' }
+      });
+      if (!response.ok) {
+        throw new Error('API returned status ' + response.status + ' (' + response.statusText + ')');
       }
-    });
-
-    if (!response.ok) {
-      throw new Error('API returned status ' + response.status + ' (' + response.statusText + ')');
+      result = await response.json();
     }
 
-    var result = await response.json();
     console.log("Verification API response received:", result);
 
     if (result && result.status && result.data) {
@@ -477,26 +479,34 @@ async function SendConformOtp() {
   }
 
   try {
-    var response = await fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify({
-        contactNumber: phoneTarget,
-        keyword: keyword || undefined
-      })
-    });
-
-    var result = null;
-    try {
-      result = await response.json();
-    } catch (e) {}
+    var result;
+    if (window.API_SERVICE && typeof window.API_SERVICE.sendOtp === 'function') {
+      result = await window.API_SERVICE.sendOtp(keyword, phoneTarget);
+    } else {
+      var endpointPath = (window.endpoints && window.endpoints.send_otp) || '/api/v1/public/employee-employment/verify/send-otp';
+      var endpoint = (baseUrl ? baseUrl : '') + endpointPath + (keyword ? ('?keyword=' + encodeURIComponent(keyword)) : '');
+      var response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          contactNumber: phoneTarget,
+          keyword: keyword || undefined
+        })
+      });
+      try {
+        result = await response.json();
+      } catch (e) {}
+      if (!response.ok && (!result || result.status === false)) {
+        throw new Error((result && result.message) || ('HTTP ' + response.status));
+      }
+    }
 
     console.log("Send OTP API response received:", result);
 
-    if (response.ok && (!result || result.status !== false)) {
+    if (!result || result.status !== false) {
       var successMsg = (result && result.message) || ('OTP sent successfully to ' + phoneTarget);
       showToast(successMsg);
 
@@ -682,29 +692,32 @@ async function sendEmployementdetials() {
   if (submitBtn) submitBtn.disabled = true;
   if (submitBtnText) submitBtnText.textContent = 'Verifying OTP...';
 
-  // Call POST confirm-otp API
-  var keyword = getKeywordFromUrl();
-  var baseUrl = getApiBaseUrl();
-  var endpoint = (baseUrl ? baseUrl : '') + '/api/v1/public/employee-employment/verify/confirm-otp' + (keyword ? ('?keyword=' + encodeURIComponent(keyword)) : '');
-
   try {
-    var response = await fetch(endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
-
-    var result = null;
-    try {
-      result = await response.json();
-    } catch (e) {}
+    var result;
+    if (window.API_SERVICE && typeof window.API_SERVICE.confirmOtp === 'function') {
+      result = await window.API_SERVICE.confirmOtp(keyword, payload);
+    } else {
+      var endpointPath = (window.endpoints && window.endpoints.conform_otp) || '/api/v1/public/employee-employment/verify/confirm-otp';
+      var endpoint = (baseUrl ? baseUrl : '') + endpointPath + (keyword ? ('?keyword=' + encodeURIComponent(keyword)) : '');
+      var response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+      try {
+        result = await response.json();
+      } catch (e) {}
+      if (!response.ok && (!result || result.status === false)) {
+        throw new Error((result && result.message) || ('HTTP ' + response.status));
+      }
+    }
 
     console.log("Confirm OTP API response received:", result);
 
-    if (response.ok && (!result || result.status !== false)) {
+    if (!result || result.status !== false) {
       showToast((result && result.message) || 'Employment clearance successfully verified!');
 
       // Update record state

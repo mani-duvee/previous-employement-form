@@ -1,0 +1,9 @@
+{
+  "name": "previous-employment-form",
+  "version": "1.0.0",
+  "description": "Employment Verification Portal",
+  "scripts": {
+    "build": "node build-env.js",
+    "start": "node -e \"console.log('Static site ready')\""
+  }
+}
