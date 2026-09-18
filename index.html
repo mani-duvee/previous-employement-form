@@ -1,84 +1,515 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full bg-slate-50 text-slate-900">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Enquiry Form</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employment Verification Portal | Deva Technology</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
-<div class="wrap">
 
-  <div class="card header">
-    <h1 id="formTitle">Enquiry Form</h1>
-    <p class="sub">Employment verification enquiry</p>
-    <p class="req-note">* Indicates required question</p>
-  </div>
+<body
+  class="min-h-full font-sans bg-slate-50 text-slate-900 antialiased flex flex-col justify-between selection:bg-indigo-600 selection:text-white">
 
-  <div class="card">
-    <h2 class="sec">Company details <span class="lock">Pre-filled</span></h2>
-    <div class="grid" id="companyGrid"></div>
-  </div>
+  <!-- Toast Notification Popup -->
+  <div id="toast" class="toast-popup" role="alert" aria-live="assertive"></div>
 
-  <div class="card">
-    <h2 class="sec">Employment details <span class="lock">Pre-filled</span></h2>
-    <div class="grid" id="employmentGrid"></div>
-  </div>
+  <!-- Main Container: Fully Mobile-Responsive (Single-column on mobile, Dual-column on Laptop/Desktop) -->
+  <div class="w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 flex-1 flex flex-col gap-6">
 
-  <form id="enquiryForm" novalidate>
-
-    <div class="card" data-field>
-      <label class="q" for="exitDate">EXIT DATE <span class="star">*</span></label>
-      <p class="hint">Date the employee left the company</p>
-      <input type="date" id="exitDate" name="exitDate" required>
-      <div class="err" id="exitErr">This is a required question</div>
-    </div>
-
-    <div class="card" data-field>
-      <label class="q" for="reasonForLeaving">REASON FOR LEAVING <span class="star">*</span></label>
-      <textarea id="reasonForLeaving" name="reasonForLeaving" rows="3" placeholder="Your answer" required></textarea>
-      <div class="err">This is a required question</div>
-    </div>
-
-    <div class="card" data-field>
-      <span class="q">RATING <span class="star">*</span></span>
-      <div class="stars" id="stars" role="radiogroup" aria-label="Rating out of 5">
-        <button type="button" data-v="1" aria-label="1 star">&#9733;</button>
-        <button type="button" data-v="2" aria-label="2 stars">&#9733;</button>
-        <button type="button" data-v="3" aria-label="3 stars">&#9733;</button>
-        <button type="button" data-v="4" aria-label="4 stars">&#9733;</button>
-        <button type="button" data-v="5" aria-label="5 stars">&#9733;</button>
-        <span class="lbl" id="ratingLbl">Not rated</span>
+    <!-- Header Navigation -->
+    <header class="border-b border-slate-200 pb-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900">Deva Technology Pvt Ltd</h1>
+          <p class="text-xs sm:text-sm text-slate-500 font-medium">HR Clearance &amp; Verification Terminal</p>
+        </div>
+        <div class="hidden sm:flex items-center gap-2">
+          <span
+            class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            Live Portal
+          </span>
+        </div>
       </div>
-      <div class="err">Please select a rating</div>
+    </header>
+
+    <!-- Responsive Grid Layout: 1 col on mobile, 12 cols on desktop/laptop -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start flex-1">
+
+      <!-- LEFT COLUMN: Pre-filled, Non-Editable Record Information (4 cols on laptop/desktop) -->
+      <aside class="lg:col-span-5 xl:col-span-4 space-y-4">
+
+        <!-- Candidate Overview Card -->
+        <div class="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-sm relative overflow-hidden">
+          <div class="flex items-start gap-4">
+            <div class="relative shrink-0">
+              <div id="avatarInitials"
+                class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-indigo-600 to-blue-600 text-white font-bold text-lg flex items-center justify-center shadow-md shadow-indigo-500/20">
+                MS
+              </div>
+              <span id="avatarStatusDot"
+                class="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-white"
+                title="Active Record"></span>
+            </div>
+
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 flex-wrap">
+                <h2 id="empName" class="font-bold text-base sm:text-lg text-slate-900 truncate">Manikandan S</h2>
+                <span id="verificationBadge"
+                  class="px-2 py-0.5 text-[10px] font-bold tracking-wide uppercase bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full">
+                  Verified
+                </span>
+              </div>
+              <p id="empRole" class="text-xs sm:text-sm text-slate-500 font-medium truncate mt-0.5">Frontend Developer
+              </p>
+
+              <div class="flex items-center gap-1.5 flex-wrap mt-2 text-[11px] text-slate-600">
+                <span id="empDept"
+                  class="px-2 py-0.5 rounded-md bg-slate-100 border border-slate-200">Development</span>
+                <span id="empMode" class="px-2 py-0.5 rounded-md bg-slate-100 border border-slate-200">Remote</span>
+                <span id="empExp" class="px-2 py-0.5 rounded-md bg-slate-100 border border-slate-200">Mid Level</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Joining Date Bar -->
+          <div class="mt-4 pt-3.5 border-t border-slate-100 flex items-center justify-between text-xs">
+            <span class="text-slate-500 font-semibold tracking-wider">JOINED ON</span>
+            <span id="dispJoinDate" class="font-bold text-slate-800">Sep 18, 2026</span>
+          </div>
+        </div>
+
+        <!-- Pre-filled Company Authority & Contact Information Card -->
+        <div class="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-sm">
+          <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
+            <div>
+              <h3 class="font-bold text-sm text-slate-900">Employement Record Data</h3>
+              <p class="text-[11px] text-slate-500">Read-only employment file</p>
+            </div>
+            <span
+              class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 uppercase tracking-wider">
+              Non-Editable
+            </span>
+          </div>
+
+          <!-- Dynamic Record Key-Value Tiles (workType is strictly excluded) -->
+          <div class="space-y-1" id="companyTiles">
+            <!-- Injected by Script.js: designation, companyName, joiningDate, department, experienceLevel, workMode, employerId, notes -->
+          </div>
+        </div>
+
+        <!-- Authorized Contacts Block -->
+        <div class="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-sm">
+          <div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-100">
+            <h4 class="font-bold text-xs text-slate-700 uppercase tracking-wider">Company Contact Details</h4>
+            <span
+              class="text-[10px] font-semibold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100">HR
+              Authority</span>
+          </div>
+          <div class="space-y-2 text-xs" id="contactDetailsContainer">
+            <!-- Filled dynamically with contactName, contactMail, contactNumber -->
+          </div>
+        </div>
+
+      </aside>
+
+      <!-- RIGHT COLUMN: Clearance Verification Console (8 cols on laptop/desktop) -->
+      <section class="lg:col-span-7 xl:col-span-8 space-y-6">
+
+        <div class="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-7 shadow-sm">
+          <!-- Terminal Header -->
+          <div class="border-b border-slate-100 pb-4 mb-5 flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <span
+                class="text-[10px] font-bold uppercase tracking-wider text-indigo-700 bg-indigo-50 border border-indigo-200 px-2.5 py-0.5 rounded-md">
+                Clearance Terminal
+              </span>
+              <h2 class="text-lg sm:text-xl font-extrabold text-slate-900 mt-1.5 tracking-tight">Employment Clearance
+                &amp; Verification</h2>
+              <p class="text-xs sm:text-sm text-slate-500 mt-0.5">Validate employment record and provide official
+                clearance credentials.</p>
+            </div>
+            <span
+              class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              Audit Ready
+            </span>
+          </div>
+
+          <!-- Already Verified Alert Banner -->
+          <div id="alreadyVerifiedNotice"
+            class="hidden mb-5 p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs sm:text-sm flex items-start gap-3 shadow-sm">
+            <svg class="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <div>
+              <h4 class="font-bold text-emerald-950 text-sm">Employment Record Already Verified</h4>
+              <p class="text-emerald-800 mt-0.5">This candidate's employment clearance has already been submitted and officially completed.</p>
+            </div>
+          </div>
+
+          <!-- Loading / API Fetching Bar -->
+          <div id="apiLoadingIndicator"
+            class="hidden mb-4 p-3 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-800 text-xs flex items-center gap-2">
+            <svg class="w-4 h-4 text-indigo-600 animate-spin" viewBox="0 0 24 24" fill="none">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+            </svg>
+            <span id="apiLoadingText">Fetching verification details for keyword...</span>
+          </div>
+
+          <form id="enquiryForm" onsubmit="event.preventDefault(); sendEmployementdetials();" novalidate
+            class="space-y-5">
+
+            <!-- STEP 1: EMPLOYMENT RECORD ACCEPTANCE (FIRST) -->
+            <div class="form-segment" data-field id="fieldAccept">
+              <div class="flex items-baseline justify-between mb-2">
+                <span class="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                  <span
+                    class="w-4 h-4 rounded bg-indigo-600 text-[10px] text-white inline-flex items-center justify-center font-bold">1</span>
+                  Employment Record Acceptance <span class="text-rose-500">*</span>
+                </span>
+                <span class="text-[11px] text-slate-500">Validate against company files</span>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <label
+                  class="decision-card relative p-4 rounded-xl border-2 border-slate-200 bg-slate-50/70 cursor-pointer hover:border-slate-300 hover:bg-white transition flex flex-col justify-between"
+                  id="cardAcceptYes">
+                  <input type="radio" name="employementAccept" value="yes" class="sr-only">
+                  <div class="flex items-start gap-3">
+                    <span
+                      class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                    </span>
+                    <div>
+                      <div class="text-xs sm:text-sm font-bold text-slate-900">Accept &amp; Validate Record</div>
+                      <p class="text-[11px] text-slate-500 mt-0.5">Records correspond accurately to company employment
+                        files.</p>
+                    </div>
+                  </div>
+                  <span
+                    class="decision-badge self-end mt-2 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-white text-slate-500 border border-slate-200">
+                    Accept Record
+                  </span>
+                </label>
+
+                <label
+                  class="decision-card relative p-4 rounded-xl border-2 border-slate-200 bg-slate-50/70 cursor-pointer hover:border-slate-300 hover:bg-white transition flex flex-col justify-between"
+                  id="cardAcceptNo">
+                  <input type="radio" name="employementAccept" value="no" class="sr-only">
+                  <div class="flex items-start gap-3">
+                    <span
+                      class="w-8 h-8 rounded-lg bg-rose-100 text-rose-700 flex items-center justify-center shrink-0">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                      </svg>
+                    </span>
+                    <div>
+                      <div class="text-xs sm:text-sm font-bold text-slate-900">Flag Discrepancy / Reject</div>
+                      <p class="text-[11px] text-slate-500 mt-0.5">Records do not correspond or further inquiry is
+                        required.</p>
+                    </div>
+                  </div>
+                  <span
+                    class="decision-badge self-end mt-2 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-white text-slate-500 border border-slate-200">
+                    Dispute
+                  </span>
+                </label>
+              </div>
+              <div class="field-error-msg text-xs text-rose-600 mt-1 hidden">Please select whether you accept or reject
+                this record</div>
+            </div>
+
+            <!-- CONDITIONAL ACCEPTANCE SECTION: Revealed when Accept is chosen -->
+            <div id="acceptanceDetailsSection"
+              class="hidden space-y-4 pt-1 border-t border-slate-100 transition-all duration-300">
+
+              <div
+                class="text-xs font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-3.5 py-2 rounded-xl flex items-center gap-2">
+                <svg class="w-4 h-4 shrink-0 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2"
+                  viewBox="0 0 24 24">
+                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span>Record accepted. Please complete the exit details and separation status below:</span>
+              </div>
+
+              <!-- Exit Date -->
+              <div class="form-segment" data-field id="fieldExitDate">
+                <div class="flex items-baseline justify-between mb-1.5">
+                  <label for="exitDate" class="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                    <span
+                      class="w-4 h-4 rounded bg-slate-200 text-[10px] text-slate-700 inline-flex items-center justify-center font-bold">A</span>
+                    Exit Date <span class="text-rose-500">*</span>
+                  </label>
+                  <span class="text-[11px] text-slate-500">Date employment concluded</span>
+                </div>
+                <input type="date" id="exitDate" name="exitDate" required
+                  class="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/10 transition shadow-sm">
+                <div class="field-error-msg text-xs text-rose-600 mt-1 hidden" id="exitDateErr">Exit date is required
+                </div>
+              </div>
+
+              <!-- Employee Employment Status (SELECT DROPDOWN) -->
+              <div class="form-segment" data-field id="fieldStatus">
+                <div class="flex items-baseline justify-between mb-1.5">
+                  <label for="employeeEmploymentStatus"
+                    class="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                    <span
+                      class="w-4 h-4 rounded bg-slate-200 text-[10px] text-slate-700 inline-flex items-center justify-center font-bold">B</span>
+                    Employment Status (<span class="font-mono text-xs text-indigo-600">employeeEmploymentStatus</span>)
+                    <span class="text-rose-500">*</span>
+                  </label>
+                  <span class="text-[11px] text-slate-500">Official separation classification</span>
+                </div>
+
+                <div class="relative">
+                  <select id="employeeEmploymentStatus" name="employeeEmploymentStatus" required
+                    class="w-full appearance-none bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/10 transition cursor-pointer shadow-sm">
+                    <option value="" disabled selected>-- Select Employment Status --</option>
+                    <option value="RESIGNED">RESIGNED (Voluntary Separation)</option>
+                    <option value="PROFESSIONAL_TRANSITION">PROFESSIONAL_TRANSITION (Career Growth)</option>
+                    <option value="TERMINATED">TERMINATED (Involuntary / Performance)</option>
+                    <option value="ABSCOND">ABSCOND (Unannounced Separation)</option>
+                  </select>
+                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3.5 text-slate-500">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                  </div>
+                </div>
+                <div class="field-error-msg text-xs text-rose-600 mt-1 hidden">Please select the employment status</div>
+              </div>
+
+              <!-- Reason for Leaving & Conduct -->
+              <div class="form-segment" data-field id="fieldReason">
+                <div class="flex items-baseline justify-between mb-1.5">
+                  <label for="reasonForLeaving"
+                    class="text-xs sm:text-sm font-bold text-slate-900 flex items-center gap-1.5">
+                    <span
+                      class="w-4 h-4 rounded bg-slate-200 text-[10px] text-slate-700 inline-flex items-center justify-center font-bold">C</span>
+                    Reason for Leaving &amp; Conduct <span class="text-rose-500">*</span>
+                  </label>
+                  <span class="text-[11px] text-slate-500">Select tag or remarks</span>
+                </div>
+
+                <!-- Quick Tag Selector -->
+                <div class="flex flex-wrap gap-1.5 mb-2" id="reasonTags">
+                  <button type="button"
+                    class="tag-chip text-xs px-2.5 py-1 rounded-full bg-slate-100 hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 hover:border-indigo-200 transition cursor-pointer"
+                    data-tag="Career advancement & professional transition">Professional Transition</button>
+                  <button type="button"
+                    class="tag-chip text-xs px-2.5 py-1 rounded-full bg-slate-100 hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 hover:border-indigo-200 transition cursor-pointer"
+                    data-tag="Pursuing higher education / studies">Higher Studies</button>
+                  <button type="button"
+                    class="tag-chip text-xs px-2.5 py-1 rounded-full bg-slate-100 hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 hover:border-indigo-200 transition cursor-pointer"
+                    data-tag="Relocation / Family commitments">Relocation</button>
+                  <button type="button"
+                    class="tag-chip text-xs px-2.5 py-1 rounded-full bg-slate-100 hover:bg-indigo-50 text-slate-700 hover:text-indigo-700 border border-slate-200 hover:border-indigo-200 transition cursor-pointer"
+                    data-tag="Mutual agreement separation">Mutual Separation</button>
+                </div>
+
+                <div class="relative">
+                  <textarea id="reasonForLeaving" name="reasonForLeaving" rows="3"
+                    placeholder="Detail grounds for separation, conduct during tenure, or handover status..." required
+                    class="w-full bg-white border border-slate-300 rounded-xl p-3.5 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/10 transition resize-y shadow-sm"></textarea>
+                  <span class="absolute bottom-2.5 right-3 text-[10px] text-slate-400 pointer-events-none"
+                    id="reasonCharCount">0 chars</span>
+                </div>
+                <div class="field-error-msg text-xs text-rose-600 mt-1 hidden">Reason for separation is required</div>
+              </div>
+
+            </div>
+
+            <!-- CONDITIONAL REJECTION SECTION: Revealed when Reject is chosen -->
+            <div id="rejectionDetailsSection" class="hidden space-y-3 pt-1 border-t border-slate-100">
+              <div
+                class="text-xs font-semibold text-rose-800 bg-rose-50 border border-rose-200 px-3.5 py-2 rounded-xl flex items-center gap-2">
+                <svg class="w-4 h-4 shrink-0 text-rose-600" fill="none" stroke="currentColor" stroke-width="2"
+                  viewBox="0 0 24 24">
+                  <path
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                  </path>
+                </svg>
+                <span>Record marked as disputed/rejected. Please specify grounds below:</span>
+              </div>
+              <div class="form-segment" data-field id="fieldDiscrepancy">
+                <label for="discrepancyRemarks" class="text-xs sm:text-sm font-bold text-slate-900 block mb-1">
+                  Discrepancy Remarks / Dispute Reason <span class="text-rose-500">*</span>
+                </label>
+                <textarea id="discrepancyRemarks" rows="2"
+                  placeholder="Specify why record does not correspond with company files..."
+                  class="w-full bg-white border border-slate-300 rounded-xl p-3 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-rose-500 transition resize-y shadow-sm"></textarea>
+              </div>
+            </div>
+
+            <!-- STEP 2: OTP AUTHORIZATION SECTION -->
+            <div class="form-segment bg-slate-50 border border-slate-200 rounded-2xl" id="fieldOtp" style="padding: 24px !important;">
+              <div
+                class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200" style="padding-top: 6px;">
+                <div class="space-y-1.5" style="padding-top: 4px;">
+                  <span class="text-[11px] font-bold uppercase tracking-wider text-slate-700 block" style="padding-top: 6px; padding-bottom: 2px; margin-bottom: 2px;">AUTHORIZATION &bull; SEND OTP</span>
+                  <span class="text-xs sm:text-sm font-bold text-slate-900 block" id="otpRecipient">9988776655</span>
+                </div>
+                <!-- SEND OTP BUTTON -> calls SendConformOtp() -->
+                <button type="button"
+                  class="btn-send-otp inline-flex items-center justify-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white text-xs sm:text-sm font-semibold px-4 py-2 rounded-xl shadow-md shadow-indigo-600/20 transition shrink-0 cursor-pointer"
+                  id="sendOtpBtn" onclick="SendConformOtp()">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                  </svg>
+                  <span id="sendOtpBtnText">Send OTP</span>
+                </button>
+              </div>
+
+              <!-- 6-digit OTP Inputs -->
+              <div class="pt-3.5">
+                <label class="block text-xs font-semibold text-slate-800 mb-2">Enter 6-digit confirmation code:</label>
+                <div class="flex justify-between gap-2 max-w-sm" id="otpDigits">
+                  <input type="text" maxlength="1"
+                    class="otp-box w-11 h-12 text-center font-mono text-base font-bold bg-white border-2 border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/15 shadow-sm"
+                    inputmode="numeric" pattern="[0-9]*" aria-label="Digit 1">
+                  <input type="text" maxlength="1"
+                    class="otp-box w-11 h-12 text-center font-mono text-base font-bold bg-white border-2 border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/15 shadow-sm"
+                    inputmode="numeric" pattern="[0-9]*" aria-label="Digit 2">
+                  <input type="text" maxlength="1"
+                    class="otp-box w-11 h-12 text-center font-mono text-base font-bold bg-white border-2 border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/15 shadow-sm"
+                    inputmode="numeric" pattern="[0-9]*" aria-label="Digit 3">
+                  <input type="text" maxlength="1"
+                    class="otp-box w-11 h-12 text-center font-mono text-base font-bold bg-white border-2 border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/15 shadow-sm"
+                    inputmode="numeric" pattern="[0-9]*" aria-label="Digit 4">
+                  <input type="text" maxlength="1"
+                    class="otp-box w-11 h-12 text-center font-mono text-base font-bold bg-white border-2 border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/15 shadow-sm"
+                    inputmode="numeric" pattern="[0-9]*" aria-label="Digit 5">
+                  <input type="text" maxlength="1"
+                    class="otp-box w-11 h-12 text-center font-mono text-base font-bold bg-white border-2 border-slate-300 rounded-xl text-slate-900 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600/15 shadow-sm"
+                    inputmode="numeric" pattern="[0-9]*" aria-label="Digit 6">
+                </div>
+
+                <div class="flex items-center justify-between text-xs mt-2.5">
+                  <span id="otpStatusText" class="text-slate-700 font-medium">Click "Send OTP" to receive authorization code</span>
+                  <span id="otpTimer" class="font-mono text-indigo-700 font-bold"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Submit & Reset Actions -->
+            <div class="pt-3 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-t border-slate-100">
+              <div class="flex items-center gap-2">
+                <span id="submitOtpHint" class="text-xs text-amber-800 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-xl inline-flex items-center gap-1.5 font-medium">
+                  <svg class="w-3.5 h-3.5 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <span>Click <strong>"Send OTP"</strong> to enable submission</span>
+                </span>
+                <span class="text-[11px] text-slate-400 hidden sm:inline-block">Immutable clearance record</span>
+              </div>
+
+              <div class="flex items-center gap-3 w-full sm:w-auto">
+                <button type="button"
+                  class="btn-secondary px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs sm:text-sm border border-slate-200 transition cursor-pointer"
+                  id="clearBtn">
+                  Reset
+                </button>
+                <!-- SUBMIT BUTTON -> revealed when send-otp succeeds -->
+                <button type="submit"
+                  class="btn-primary hidden px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs sm:text-sm items-center justify-center gap-2 shadow-md shadow-indigo-600/25 active:scale-[0.99] transition cursor-pointer"
+                  id="submitBtn">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                  </svg>
+                  <span id="submitBtnText">Submit Clearance</span>
+                </button>
+              </div>
+            </div>
+
+          </form>
+        </div>
+
+        <!-- Submitted Payload Terminal Card (Revealed on submit) -->
+        <section
+          class="output-terminal hidden bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-lg"
+          id="outCard">
+          <div class="bg-slate-950 px-4 py-3 flex items-center justify-between border-b border-slate-800">
+            <div class="flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+              <span class="text-xs font-mono text-slate-300 ml-1.5">Clearance Payload &bull; Sent to Console</span>
+            </div>
+            <button type="button"
+              class="text-xs font-mono bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded transition"
+              id="copyJsonBtn">Copy JSON</button>
+          </div>
+          <div class="p-4">
+            <div
+              class="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-3 mb-3 flex items-center gap-2">
+              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+              <span>Submitted successfully and logged to console via <code>sendEmployementdetials()</code></span>
+            </div>
+            <pre class="font-mono text-xs text-indigo-300 bg-slate-950 rounded-xl p-4 overflow-x-auto max-h-80"
+              id="outJson"></pre>
+          </div>
+        </section>
+
+      </section>
+
     </div>
 
-    <div class="card" data-field>
-      <span class="q">EMPLOYMENT ACCEPT <span class="star">*</span></span>
-      <div class="radios">
-        <label><input type="radio" name="employementAccept" value="yes"> Yes</label>
-        <label><input type="radio" name="employementAccept" value="no"> No</label>
-      </div>
-      <div class="err">This is a required question</div>
-    </div>
+    <!-- Footer -->
+    <footer
+      class="border-t border-slate-200 pt-4 pb-2 text-center text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <p>&copy; 2026 Deva Technology Pvt Ltd. Employment Verification System.</p>
+      <p>Authorized HR Representative Portal &bull; Confidentiality Protected</p>
+    </footer>
 
-    <div class="actions">
-      <button type="submit" class="primary">Submit</button>
-      <button type="button" class="link" id="clearBtn">Clear form</button>
-    </div>
-  </form>
-
-  <div class="card out" id="out">
-    <h2>Submitted data (also logged to console)</h2>
-    <pre id="outJson"></pre>
   </div>
 
-  <p class="foot">Never submit passwords through this form.</p>
-</div>
-
-<script src="script.js"></script>
+  <script src="env.js"></script>
+  <script src="api.js"></script>
+  <script src="Script.js"></script>
 </body>
+
 </html>
